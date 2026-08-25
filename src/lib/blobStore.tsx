@@ -6,6 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { newId } from './postStore';
 import { backend, isServerMode } from './backend';
+import { optimizeImage } from './imageOptimize';
 
 const DB_NAME = 'ohome-blobs';
 const STORE = 'files';
@@ -73,6 +74,7 @@ async function hashOf(blob: Blob): Promise<string | null> {
 
 /** Blob 저장 → 참조 문자열 반환 (서버 모드: 공개 URL · 로컬 모드: 파일 id) */
 export async function putBlob(blob: Blob): Promise<string> {
+  blob = await optimizeImage(blob);   // 업로드 전 PNG 등을 WebP로 변환(용량 절감)
   const key = await hashOf(blob);
   const hit = key ? sent.get(key) : undefined;
   if (hit) return hit;
