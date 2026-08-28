@@ -16,6 +16,7 @@ import { CropEditor, CropValue, CropImg } from '@/components/ui/CropEditor';
 import { DragList } from '@/components/ui/DragList';
 import { useConfirmDelete } from '@/components/ui/Modal';
 import { SymbolInput } from '@/components/ui/SymbolInput';
+import { UrlAdd } from '@/components/ui/UrlAdd';
 import { fileDrop } from '@/lib/dnd';
 import { isValidSlug, slugify } from '@/lib/link';
 import { useToast } from '@/components/ui/Toast';
@@ -81,9 +82,17 @@ export function CharEditForm({ initial, onSave, onCancel, auMode, existingIds }:
       if (prev.length === 0) { setThumbCrop(undefined); setCropOpen(true); } // 첫 장 → 썸네일 크롭 (6.1)
       return [...prev, ...items];
     });
-  };
+   };
 
-  const save = async () => {
++  // 외부 이미지 링크로 추가 — 내 저장소에 올리지 않고 그 주소를 그대로 참조로 쓴다
++  const addArtUrl = (url: string) => {
++    setArts(prev => {
++      if (prev.length === 0) { setThumbCrop(undefined); setCropOpen(true); }
++      return [...prev, { id: newId(), url, ref: url }];
++    });
++  };
++
+   const save = async () => {
     if (!name.trim()) { toast('이름을 입력해 주세요'); return; }
     // 페이지 주소 (v1.9 / 수정도 가능 v2.0) — 유효성·중복 검사
     if (slug && slug !== (initial?.slug ?? '')) {
@@ -187,7 +196,7 @@ export function CharEditForm({ initial, onSave, onCancel, auMode, existingIds }:
           {...fileDrop(fl => addArts(fl))}>
           ＋ ADD ART {arts.length === 0 && '(첫 장 등록 시 썸네일 크롭 지정)'}
         </button>
-
+<UrlAdd onAdd={addArtUrl} placeholder="또는 이미지 링크(URL) 붙여넣기" />
         {/* 기본 정보 스펙 */}
         <label className="k-label" style={{ margin: 0 }}>기본 정보 항목</label>
         <DragList items={specs} keyOf={s => s.id} onReorder={setSpecs}
