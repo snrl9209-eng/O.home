@@ -143,6 +143,9 @@ a{color:inherit;text-decoration:none}
 .notif-menu .nt.rd{opacity:.48}
 .notif-menu .nset{border-top:1px solid rgba(127,127,127,.18);margin-top:6px;padding:8px 12px 4px;display:grid;gap:7px}
 .notif-menu .nset .row{display:flex;justify-content:space-between;align-items:center;font-size:calc(11px*var(--fs,1));color:var(--dd-fg);cursor:default}
+/* 켜짐은 포인트색으로 (v2.0 포크 제보 — 「켜진 건지 꺼진 건지 분간이 안 된다」).
+   기본 켜짐색(--ink 검정 알약)이 어두운 드롭다운 배경에 묻혀 꺼짐(회색)과 구별되지 않았다 */
+.notif-menu .k-toggle input:checked + .tr{background:var(--accent)}
 .badge-dot{position:relative;color:var(--top-fg);display:grid;place-items:center;width:32px;height:32px;border-radius:9px;transition:.15s}
 .badge-dot:hover{color:var(--top-hv,#fff)}
 .badge-dot svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;display:block}

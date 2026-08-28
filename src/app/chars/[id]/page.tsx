@@ -7,7 +7,7 @@ import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { useLocalList } from '@/lib/postStore';
-import { Character, CHAR_SEED, charGrant, charWithAu, chipBorder, Relation, REL_SEED } from '@/lib/charStore';
+import { Character, CHAR_SEED, charGrant, charWithAu, chipBorder, Relation, REL_SEED , findByKey} from '@/lib/charStore';
 import { sanitizeHtml } from '@/lib/sanitize';
 import { useFonts } from '@/lib/fontStore';
 import { useTheme } from '@/lib/ThemeProvider';
@@ -27,14 +27,15 @@ function CharDetailInner() {
   const [rels] = useLocalList<Relation>('ohome.rels.v1', REL_SEED);
   const { familyOf } = useFonts();
   // 큰 글씨 — 추가 섹션(창고캐 등)이면 그 이름, 눌렀을 때도 그 목록으로 (v2.0 사용자 제보)
-  const tt = useSectionTitle('chars', chars.find(c => c.id === id)?.secId, 'CHARACTERS');
+  const tt = useSectionTitle('chars', findByKey(chars, id)?.secId, 'CHARACTERS');
   const params = useSearchParams();
   const [tab, setTab] = useState('basic');
   const [artIdx, setArtIdx] = useState(0);
   const [delAsk, setDelAsk] = useState(false);   // 캐릭터 삭제 확인
   const infoRef = useRef<HTMLDivElement>(null);
 
-  const ch = chars.find(c => c.id === id);
+  // 별명 주소로도 열린다 (v2.0 사용자 요청 — 주소를 나중에 바꿔도 옛 주소가 살아 있게)
+  const ch = findByKey(chars, id);
 
   // AU 프로필 (v1.9) — 이 캐릭터가 속한 자관들의 AU 리스트 (base 제외), 우상단에 썸네일로
   const charAus = useMemo(() => (ch
